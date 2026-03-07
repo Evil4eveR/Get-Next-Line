@@ -6,31 +6,56 @@
 /*   By: ymarmoud <ymarmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 14:34:01 by ymarmoud          #+#    #+#             */
-/*   Updated: 2026/03/05 00:36:09 by ymarmoud         ###   ########.fr       */
+/*   Updated: 2026/03/07 22:21:57 by ymarmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
-{
 
-	char	*result;
-	if(!result)
-		return NULL;
-	read(fd, result, BUFFER_SIZE);
-	// loop until you read all the text
-	// find '\n'
-	//
-	return (result);
+int readfile(int fd)
+{
+	
 }
+
+
+
+// char	*get_next_line(int fd)
+// {
+// 	char *puffer;
+// 	char *vorrat;
+// 	int b_gelesen;
+
+// 	puffer = malloc(BUFFER_SIZE +1);
+// 	if(!puffer)
+// 		return NULL;
+// 	while(b_gelesen>0)
+// 		{
+			 
+// 		}
+// 		return vorrat;
+// }
 int main()
 {
 	printf("***********************************\n*    The_get_next_line project    *\n***********************************\n***********************************\n");
 
 
-
+	// open it is a function return int which is file descriptor 
+	// open takes 2 argement, and ...
+	// first arg is char * the path of the file to be readed
+	// second arg is int which is O_RDONLY or O_WDONLY to read or write 
+	// if the second option is O_CREAT the third arg should be added
+	// third arg is to describe the permission of the file created 
 	int f = open("text.txt",O_RDONLY);
-	printf("%s\n", get_next_line(f));    
+	
+	char *buf;
+	int sizeb = 5;
+	buf = malloc(sizeb);
+	int r_bytes = read(f,buf,sizeb);
+
+	printf("%d\n",f);
+	printf("%d\n",sizeb);
+	printf("%s\n",buf);	
+	free(buf);
 	return 0;
 }
