@@ -6,19 +6,11 @@
 /*   By: ymarmoud <ymarmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 14:34:01 by ymarmoud          #+#    #+#             */
-/*   Updated: 2026/03/07 22:21:57 by ymarmoud         ###   ########.fr       */
+/*   Updated: 2026/03/08 00:02:30 by ymarmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-
-int readfile(int fd)
-{
-	
-}
-
-
 
 // char	*get_next_line(int fd)
 // {
@@ -49,13 +41,14 @@ int main()
 	int f = open("text.txt",O_RDONLY);
 	
 	char *buf;
-	int sizeb = 5;
+	int sizeb = 6;
 	buf = malloc(sizeb);
-	int r_bytes = read(f,buf,sizeb);
-
 	printf("%d\n",f);
-	printf("%d\n",sizeb);
-	printf("%s\n",buf);	
+	//printf("%d\n",);
+	while (read(f,buf,sizeb) != 0)
+	{
+		printf("%s",buf);
+	}
 	free(buf);
 	return 0;
 }
