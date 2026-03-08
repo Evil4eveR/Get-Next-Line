@@ -83,47 +83,79 @@ void	*ft_mmcpy(void	*des, void const *src, size_t n)
 	return (d);
 }
 
-int main(void)
+char	*ft_strchr(char	*s, int c)
 {
-    printf("--- Testing ft_strdup ---\n\n");
+	if(!s && c!='\0')
+		return (0);
+	while(*s)
+	{
+		if(*s == (unsigned char)c)
+			return ((char *)s);
+		s++;
+	}
+	if (*s == (unsigned char)c)
+		return ((char *)s);
+	return (NULL);
+}
 
-    // 1. Create a source string on the Stack
-    char original[] = "Wolfsburg";
-    
-    // 2. Duplicate it onto the Heap
-    char *duplicate = ft_strdup(original);
+char	*ft_check(char	*tmp, char *buf, ssize_t rb)
+{
+	char	*keep_tmp;
+	size_t	len;
 
-    if (!duplicate)
-    {
-        printf("Error: Malloc failed.\n");
-        return (1);
-    }
+	len = 0;
+	keep_tmp = NULL;
+	if(tmp)
+	{
+		keep_tmp = ft_strdup(tmp);
+		free(tmp);
+		len = ft_strlen(keep_tmp) + ft_strlen(buf);
+		tmp = (char *)malloc(len + 1);
+		if(!tmp)
+			return (NULL);
+		ft_mmcpy(tmp, keep_tmp, ft_strlen(keep_tmp)+1);
+		tmp[ft_strlen(keep_tmp)]= '\0';
+		ft_mmcpy(ft_strchr(tmp, '\0'), buf, ft_strlen(buf)+1);
+		tmp[len]= '\0';
+		free(keep_tmp);
+	}
+	else if(!tmp)
+		tmp = ft_strdup(buf);
+	return (tmp);
+}
 
-    // 3. Compare addresses (They MUST be different)
-    printf("Addresses:\n");
-    printf("Original address:  %p\n", (void *)original);
-    printf("Duplicate address: %p\n", (void *)duplicate);
-    
-    if (original == duplicate)
-        printf("FAIL: Both pointers point to the same memory!\n\n");
-    else
-        printf("SUCCESS: Duplicate is in a new memory location.\n\n");
+void	ft_extract(char **ptr)
+{
+	char *keep_tmp;
 
-    // 4. Compare content
-    printf("Content:\n");
-    printf("Original:  %s\n", original);
-    printf("Duplicate: %s\n", duplicate);
+	keep_tmp = ft_strdup(ft_strchr(*ptr, '\n')+1);
+	free(*ptr);
 
-    // 5. The "Independence" Test
-    // Modify the original string. The duplicate should NOT change.
-    original[0] = 'X';
-    printf("\nAfter modifying original[0] to 'X':\n");
-    printf("Original:  %s\n", original);
-    printf("Duplicate: %s (Should still be Wolfsburg)\n", duplicate);
+}
 
-    // 6. Clean up the Heap
-    free(duplicate);
-    printf("\nMemory freed. Test complete.\n");
+char	*ft_free(char **ptr_tmp,char **ptr_buf, size_t b)
+{
+	char *line;
 
-    return (0);
+	line = NULL;
+	if(*ptr_tmp && **ptr_tmp && b==0)
+	{
+		line = ft_strdup(*ptr_tmp);
+		free(*ptr_tmp);
+		*ptr_tmp = NULL;
+		free(*ptr_buf);
+		*ptr_buf = NULL;
+		return (line);
+	}
+	if(ft_strchr(*ptr_tmp,'\n')!= NULL)
+	{
+		line = ft_substr(*ptr_tmp, 0, ft_strlen(*ptr_tmp)-ft_strlen(ft_strchr(*ptr_tmp, '\n'))+1);
+		ft_extract(ptr_tmp);
+		return (line);
+	}
+	free(*ptr_tmp);
+	*ptr_tmp = NULL;
+	free(*ptr_buf);
+	*ptr_buf = NULL;
+	return (NULL);
 }

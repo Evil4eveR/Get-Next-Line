@@ -11,44 +11,58 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <stdio.h>
 
-// char	*get_next_line(int fd)
-// {
-// 	char *puffer;
-// 	char *vorrat;
-// 	int b_gelesen;
+char	*get_next_line(int fd)
+{
+	static char tmp;
+	char *buffer;
+	char *line;
+	ssize_t	r_bytes;
 
-// 	puffer = malloc(BUFFER_SIZE +1);
-// 	if(!puffer)
-// 		return NULL;
-// 	while(b_gelesen>0)
-// 		{
-			 
-// 		}
-// 		return vorrat;
-// }
+	line = NULL;
+	buffer = NULL;
+	r_bytes = 1;
+	if(fd<0 || BUFFER_SIZE <= 0 )
+		return NULL;
+	while (r_bytes != 0) 
+	{
+		if(ft_strchr(tmp,'\n') != NULL)
+			return(ft_free(&tmp,&buffer,r_bytes));
+		buffer = (char *)malloc(BUFFER_SIZE + 1);
+		if(!buffer)
+			return (NULL);
+		r_bytes = read(fd, buffer, BUFFER_SIZE);
+		if(r_bytes <= 0)
+			break;
+		free(tmp);
+		tmp = NULL;
+		free(buffer);
+		buffer = NULL;
+	}
+	return (ft_free(&tmp, &buffer,r_bytes));
+}
+
 int main()
 {
 	printf("***********************************\n*    The_get_next_line project    *\n***********************************\n***********************************\n");
-
-
-	// open it is a function return int which is file descriptor 
-	// open takes 2 argement, and ...
-	// first arg is char * the path of the file to be readed
-	// second arg is int which is O_RDONLY or O_WDONLY to read or write 
-	// if the second option is O_CREAT the third arg should be added
-	// third arg is to describe the permission of the file created 
-	int f = open("text.txt",O_RDONLY);
-	
-	char *buf;
-	int sizeb = 6;
-	buf = malloc(sizeb);
-	printf("%d\n",f);
-	//printf("%d\n",);
-	while (read(f,buf,sizeb) != 0)
+	int fd = 0;
+	char *string = NULL;
+	fd = open("test.txt",O_RDONLY);
+	if(fd<0)
 	{
-		printf("%s",buf);
+		printf("error de lire le text\n");
+		return (1);
 	}
-	free(buf);
+	string = get_next_line(fd);
+	while(string)
+	{
+		printf("%s",string);
+		string = get_next_line(fd);
+	}
+	
 	return 0;
 }

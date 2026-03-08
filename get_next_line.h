@@ -23,6 +23,15 @@
 # endif
 
 char	*get_next_line(int fd);
+size_t	ft_strlen(char *s);
+char	*ft_strdup(char *s);
+char	*ft_substr(char	*s, unsigned int start, size_t l);
+void	*ft_mmcpy(void	*des, void const *src, size_t n);
+char	*ft_strchr(char	*s, int c);
 
+
+char	*ft_check(char	*tmp, char *buf, ssize_t rb);
+char	*ft_free(char **ptr_tmp,char **ptr_buf, size_t b);
+void	ft_extract(char **ptr);
 #endif
 
