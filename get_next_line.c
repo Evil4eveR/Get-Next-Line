@@ -6,7 +6,7 @@
 /*   By: ymarmoud <ymarmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 14:34:01 by ymarmoud          #+#    #+#             */
-/*   Updated: 2026/03/08 00:02:30 by ymarmoud         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:16:42 by ymarmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 char	*get_next_line(int fd)
 {
-	static char tmp;
+	static char *tmp;
 	char *buffer;
 	char *line;
 	ssize_t	r_bytes;
@@ -51,7 +51,7 @@ int main()
 	printf("***********************************\n*    The_get_next_line project    *\n***********************************\n***********************************\n");
 	int fd = 0;
 	char *string = NULL;
-	fd = open("test.txt",O_RDONLY);
+	fd = open("text.txt",O_RDONLY);
 	if(fd<0)
 	{
 		printf("error de lire le text\n");
