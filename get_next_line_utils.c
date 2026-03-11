@@ -6,94 +6,104 @@
 /*   By: ymarmoud <ymarmoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 14:34:28 by ymarmoud          #+#    #+#             */
-/*   Updated: 2026/03/09 17:34:07 by ymarmoud         ###   ########.fr       */
+/*   Updated: 2026/03/11 02:07:33 by ymarmoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char	*s)
+int  ft_strlen(char *s)
 {
-	size_t	cnt;
+    int  cnt;
 
-	cnt = 0;
-	while(s[cnt])
-		cnt++;
-	return (cnt);
+    cnt = 0;
+    while(s[cnt])
+        cnt++;
+    return (cnt);
 }
 
-ft_strdup(char	*s)
+char    *ft_strdup(char *s)
 {
-	char	*sdup;
-	int		i;
+    char    *sdup;
+    int     i;
 
-	sdup = (char *)malloc(ft_strlen(s)+1);
-	if(!sdup)
-		return (NULL);
-	i = 0;
-	while(s[i])
-	{
-		sdup[i]=s[i];
-		i++;
-	}
-	sdup[i]='\0';
-	return (sdup);
-}
-char	*ft_substr(char	*s, unsigned int start, size_t l)
-{
-	char	*subs;
-	size_t		i;
-
-	if(!s)
-		return (NULL);
-	if(start>ft_strlen(s))
-		return(ft_strdup(""));
-	if (l > ft_strlen(s) - start)
-		l = ft_strlen - start;
-	subs =(char *)malloc(l+1);
-	if(!subs)
-		return (NULL);
-	i = 0;
-	while(s[start+i] && i < l)
-	{
-		subs[i] = s[start+i];
-		i++;
-	}
-	subs[i]= '\0';
-	return (subs);
+    if(!s)
+        return (NULL);
+    sdup=(char*)malloc(ft_strlen(s)+1);
+    if(!s)
+        return (NULL);
+    i = 0;
+    while(s[i])
+    {
+        sdup[i] = s[i];
+        i++;
+    }
+    sdup[i]= '\0';
+    return (sdup);
 }
 
-void	*ft_mmcpy(void	*des, void const *src, size_t n)
+char    *ft_strjoin(char *s1, char *s2)
 {
-	unsigned char	*d;
-	unsigned char	*s;
-	size_t	i;
+    char    *s1s2;
+    int     i;
+    int     j;
 
-	d = (unsigned char	*)des;
-	s = (unsigned char	*)src;
-	if (!des && !src)
-		return (NULL);
-	i = 0;
-	while(i < n)
-	{
-		d[i]=s[i];
-		i++;
-	}
-	d[i]='\0';
-	return (d);
+    if (!s1 || !s2)
+        return (NULL);
+    s1s2 = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+    if (!s1s2)
+        return (NULL);
+    i = 0;
+    while (s1[i])
+    {
+        s1s2[i] = s1[i];
+        i++;
+    }
+    j = 0;
+    while (s2[j])
+    {
+        s1s2[i + j] = s2[j];
+        j++;
+    }
+    s1s2[i + j] = '\0';
+    return (s1s2);
 }
 
-char	*ft_strchr(char	*s, int c)
+char    *ft_strsub(char *s, int start, int len)
 {
-	if(!s && c!='\0')
-		return (0);
-	while(*s)
-	{
-		if(*s == (unsigned char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (*s == (unsigned char)c)
-		return ((char *)s);
-	return (NULL);
+    char    *subs;
+    int     i;
+
+    if(!s || start > ft_strlen(s))
+        return (NULL);
+    if(len > ft_strlen(s)- start)
+        len = ft_strlen(s) -start;
+    i = 0;
+    subs = (char *)malloc(len +1);
+    if(!subs)
+        return (NULL);
+    while(i<len)
+    {
+        subs[i]=s[start +i];
+        i++;
+    }
+    subs[i]='\0';
+    return (subs);
+}
+char    *ft_strchr(char  *s, int c)
+{
+    int i;
+
+    if(!s)
+        return (NULL);
+    i=0;
+    while(s[i])
+    {
+        if(s[i]==(char)(c))
+            return (char *)s+i;
+        i++;
+    }
+    if(s[i]==(char)(c))
+        return (char *)s+i;
+    return (NULL);
 }
