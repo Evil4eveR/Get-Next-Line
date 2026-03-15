@@ -1,92 +1,75 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   get_next_line.c									:+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: ymarmoud <ymarmoud@student.42.fr>		  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2026/03/01 14:34:01 by ymarmoud		  #+#	#+#			 */
-/*   Updated: 2026/03/11 22:48:42 by ymarmoud		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ymarmoud <ymarmoud@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/01 14:34:01 by ymarmoud          #+#    #+#             */
+/*   Updated: 2026/03/15 23:26:22 by ymarmoud         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-char	*read_and_accumulate(int fd, char *s)
+static char	*readandaccum(int fd, char	*stash)
 {
-	char	*bf;
-	int		r_byte;
+	char	*buf;
+	char	*tmp;
+	ssize_t	r;
 
-	bf = (char *)malloc(BUFFER_SIZE + 1);
-	if (!s)
-		s = ft_strdup("");
-	while ((r_byte = read(fd, bf, BUFFER_SIZE)) > 0)
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	r = 1;
+	while (r > 0 && !ft_strchr(stash, '\n'))
 	{
-		s = ft_strjoin(s, bf);
-		if (ft_strchr(s, '\n'))
-			break ;
+		r = read(fd, buf, BUFFER_SIZE);
+		if (r < 0)
+			return (free(buf), free(stash), NULL);
+		buf[r] = '\0';
+		if (r > 0)
+		{
+			tmp = ft_strjoin(stash, buf);
+			if (!tmp)
+				return (free(buf), free(stash), NULL);
+			free(stash);
+			stash = tmp;
+		}
 	}
-	free(bf);
-	return (s);
+	free(buf);
+	return (stash);
 }
 
-char	*extract_my_line(char *s)
+static char	*clean_stash(char *stash)
 {
-	char	*l;
-	int		i;
+	char	*new;
+	size_t	i;
 
-	if (!s || !*s)
-		return (NULL);
 	i = 0;
-	while (s[i] && s[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
-	l = ft_strsub(s, 0, i + 1);
-	return (l);
-}
-
-char	*update_my_save(char *s)
-{
-	char	*new_save;
-	char	*ptr;
-
-	ptr = ft_strchr(s, '\n');
-	if (!ptr)
-	{
-		free(s);
-		return (NULL);
-	}
-	new_save = ft_strdup(ptr + 1);
-	free(s);
-	return (new_save);
+	if (!stash[i])
+		return (free(stash), NULL);
+	new = ft_strdup(stash + i + 1);
+	free(stash);
+	return (new);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*save;
-	char			*line;
+	static char	*stash;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	save = read_and_accumulate(fd, save);
-	if (!save)
-		return (NULL);
-	line = extract_my_line(save);
-	save = update_my_save(save);
+		return (free(stash), stash = NULL, NULL);
+	stash = readandaccum(fd, stash);
+	if (!stash || !*stash)
+		return (free(stash), stash = NULL, NULL);
+	line = extract_line(stash);
+	if (!line || !*line)
+		return (free(stash), stash = NULL, NULL);
+	stash = clean_stash(stash);
 	return (line);
 }
-S
-// int main()
-// {
-// 	int	 fd;
-// 	char	*line;
-
-// 	fd = open("text.txt", O_RDONLY);
-// 	// Loop until get_next_line returns NULL (End of File)
-// 	while ((line = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("%s", line); // Print the line
-// 		free(line);		 // Free the line to avoid memory leaks!
-// 	}
-// 	close(fd);
-// 	return (0);
-// }
